@@ -1,0 +1,31 @@
+.thumbs {
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 30px; 
+}
+
+#images{
+    text-align:center;
+}
+
+.social-media{
+    display: flex;
+    justify-content: center;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+}
+
+.active a {
+    background-color: yellow !important;
+}
