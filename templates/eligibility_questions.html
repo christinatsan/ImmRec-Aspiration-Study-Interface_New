@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Please answer the following questions</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+  {% block content %}
+    <h4>Please answer the following questions</h4>
+    <form method="post" action="{{ url_for('eligibility') }}">
+        1. Do you listen to podcast or radio shows?</b><br>
+          <table style="width:100%">
+          <br>
+            <tr>
+              <td class="surv_cell"><input type="radio" name="podcast_or_radio" value="yes" required> Yes</td>
+              <td class="surv_cell"><input type="radio" name="podcast_or_radio" value="no" required> No</td>
+            </tr>
+          </table>
+          <br>
+        2. Do you read Medium articles or written news?</b><br>
+          <table style="width:100%">
+          <br>
+            <tr>
+              <td class="surv_cell"><input type="radio" name="medium_news" value="yes" required> Yes</td>
+              <td class="surv_cell"><input type="radio" name="medium_news" value="no" required> No</td>
+            </tr>
+          </table>
+          <br> 
+          <p><button class="btn btn-info" type="submit">Next</button></p>         
+    </form>
+  {% endblock %}
+  </div>
+   </body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Choose a Category</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+    <style>
+* {
+    box-sizing: border-box;
+}
+
+/* Create three equal columns that floats next to each other */
+.column {
+    float: left;
+    width: 20%;
+    padding: 0px;
+    height: 50%;
+    text-align: center;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+</style>
+
+  </head>
+  <body>
+    <div class="container">
+  <h3>Podcasts</h3>
+  <h5>What topics do you usually listen to?</h5>
+  <ul class = "list-group">
+    {% for category in categories %}
+    <div class="column" style="background-color:#aaa;">
+      <li class="list-group-item" style="height: 100px">{{category}}</li>
+    </div>
+    {% endfor %}
+    </ul>
+  </div>
+
+  <div>
+    <div class="text-center" style="padding-top: 20%">
+      <a href={{ url_for('categories4_pod') }}>
+          <button onClick="clickFunction()" class="btn btn-info">Next</button>
+        </a>
+    </div>
+</div> 
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <script type="text/javascript">
+    $(".list-group .list-group-item").click(function(e) {
+      $(e.target).toggleClass("active");
+    });
+
+    function clickFunction() {
+      var items = document.getElementsByClassName("list-group-item active");
+      var i;
+      var jsonItems = {};
+      for (i = 0; i < items.length; i++) {
+
+        var item = items[i].innerText;
+
+        var newdata = {};
+        newdata[i] = {item};
+
+        $.extend(true, jsonItems, newdata);
+
+      }
+
+      $.post( "/postmethodpod3", {
+        javascript_data: JSON.stringify(jsonItems)
+      });
+      
+    }
+
+
+
+  </script>
+
+</div>
+    
+  </body>
+</html>
