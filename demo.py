@@ -4,8 +4,13 @@ import json
 from forms import LoginForm
 import flask_login
 import flask
-from gensim.models import  Word2Vec
-from gensim.models import KeyedVectors
+import numpy as np
+from sklearn.neighbors import NearestNeighbors
+from random import shuffle
+# from gensim.models import  Word2Vec
+# from gensim.models import KeyedVectors
+
+
 
 app = Flask(__name__, static_url_path='/static')
 app.secret_key = 'super secret string'  # Change this!
@@ -25,6 +30,22 @@ podChosenTags3 = []
 podChosenTags4 = []
 podChosenTags5 = []
 
+with open('tag_book.json','r') as fin:
+   tag_book = json.load(fin)
+
+
+ind_to_tag = dict()
+tag_to_ind = dict()
+
+for tag, ind in tag_book.items():
+   ind_to_tag[ind] = tag
+
+for tag, ind in tag_book.items():
+   tag_to_ind[tag] = ind
+
+
+tag_features = np.load("tag_features.npy")
+nbrs = NearestNeighbors(n_neighbors=26,metric='cosine', algorithm='brute').fit(tag_features)
 
 
 @app.route('/')
@@ -67,86 +88,221 @@ def categories_news():
 @app.route("/categories2_pod")
 def categories2_pod():
 
-	word_vectors = KeyedVectors.load("pod-word-vectors")
-	nearest_tags = word_vectors.most_similar(podChosenTags1,topn=25)
+	# word_vectors = KeyedVectors.load("pod-word-vectors")
+	# nearest_tags = word_vectors.most_similar(podChosenTags1,topn=25)
 
-	tagList = [i[0] for i in nearest_tags]
+	qTags = []
+
+	for i in podChosenTags1:
+		qT = tag_to_ind[i]
+		qTags.append(tag_features[qT])
 
 
-	return render_template('categories2_pod.html',categories = tagList)
+	neighbors = []
+	distances, indices = nbrs.kneighbors(qTags)
+
+	inds = indices.tolist()
+
+	for eachInd in inds:
+		for i in eachInd:
+			neighbors.append(ind_to_tag[i])
+
+	del neighbors[0]
+
+	shuffle(neighbors)
+	neighbors = neighbors[:25]
+
+
+	return render_template('categories2_pod.html',categories = neighbors)
 
 @app.route("/categories2_news")
 def categories2_news():
+	
+	qTags = []
+
+	for i in newsChosenTags1:
+		qT = tag_to_ind[i]
+		qTags.append(tag_features[qT])
 
 
-	word_vectors = KeyedVectors.load("news-word-vectors")
-	nearest_tags = word_vectors.most_similar(newsChosenTags1,topn=25)
+	neighbors = []
+	distances, indices = nbrs.kneighbors(qTags)
 
-	tagList = [i[0] for i in nearest_tags]
+	inds = indices.tolist()
 
+	for eachInd in inds:
+		for i in eachInd:
+			neighbors.append(ind_to_tag[i])
 
-	return render_template('categories2_news.html',categories = tagList)
+	del neighbors[0]
+
+	shuffle(neighbors)
+	neighbors = neighbors[:25]
+
+	return render_template('categories2_news.html',categories = neighbors)
 
 @app.route("/categories3_pod")
 def categories3_pod():
 
-	word_vectors = KeyedVectors.load("pod-word-vectors")
-	nearest_tags = word_vectors.most_similar(podChosenTags2,topn=25)
+	
+	qTags = []
 
-	tagList = [i[0] for i in nearest_tags]
+	for i in podChosenTags2:
+		qT = tag_to_ind[i]
+		qTags.append(tag_features[qT])
 
-	return render_template('categories3_pod.html',categories = tagList)
+
+	neighbors = []
+	distances, indices = nbrs.kneighbors(qTags)
+
+	inds = indices.tolist()
+
+	for eachInd in inds:
+		for i in eachInd:
+			neighbors.append(ind_to_tag[i])
+
+	del neighbors[0]
+	
+	shuffle(neighbors)
+	neighbors = neighbors[:25]
+
+
+	return render_template('categories3_pod.html',categories = neighbors)
 
 @app.route("/categories3_news")
 def categories3_news():
-	word_vectors = KeyedVectors.load("news-word-vectors")
-	nearest_tags = word_vectors.most_similar(newsChosenTags2,topn=25)
+	
+	qTags = []
 
-	tagList = [i[0] for i in nearest_tags]
+	for i in newsChosenTags2:
+		qT = tag_to_ind[i]
+		qTags.append(tag_features[qT])
 
-	return render_template('categories3_news.html',categories = tagList)
+
+	neighbors = []
+	distances, indices = nbrs.kneighbors(qTags)
+
+	inds = indices.tolist()
+
+	for eachInd in inds:
+		for i in eachInd:
+			neighbors.append(ind_to_tag[i])
+
+	del neighbors[0]
+	
+	shuffle(neighbors)
+	neighbors = neighbors[:25]
+
+	return render_template('categories3_news.html',categories = neighbors)
 
 @app.route("/categories4_pod")
 def categories4_pod():
 
-	word_vectors = KeyedVectors.load("pod-word-vectors")
-	nearest_tags = word_vectors.most_similar(podChosenTags3,topn=25)
+	
+	qTags = []
 
-	tagList = [i[0] for i in nearest_tags]
+	for i in podChosenTags3:
+		qT = tag_to_ind[i]
+		qTags.append(tag_features[qT])
 
-	return render_template('categories4_pod.html',categories = tagList)
+
+	neighbors = []
+	distances, indices = nbrs.kneighbors(qTags)
+
+	inds = indices.tolist()
+
+	for eachInd in inds:
+		for i in eachInd:
+			neighbors.append(ind_to_tag[i])
+
+	del neighbors[0]
+	
+	shuffle(neighbors)
+	neighbors = neighbors[:25]
+
+	return render_template('categories4_pod.html',categories = neighbors)
 
 @app.route("/categories4_news")
 def categories4_news():
-	word_vectors = KeyedVectors.load("news-word-vectors")
-	nearest_tags = word_vectors.most_similar(newsChosenTags3,topn=25)
+	
+	qTags = []
 
-	tagList = [i[0] for i in nearest_tags]
+	for i in newsChosenTags3:
+		qT = tag_to_ind[i]
+		qTags.append(tag_features[qT])
 
-	return render_template('categories4_news.html',categories = tagList)
+
+	neighbors = []
+	distances, indices = nbrs.kneighbors(qTags)
+
+	inds = indices.tolist()
+
+	for eachInd in inds:
+		for i in eachInd:
+			neighbors.append(ind_to_tag[i])
+
+	del neighbors[0]
+	
+	shuffle(neighbors)
+	neighbors = neighbors[:25]
+
+	return render_template('categories4_news.html',categories = neighbors)
 
 @app.route("/categories5_pod")
 def categories5_pod():
-	word_vectors = KeyedVectors.load("pod-word-vectors")
-	nearest_tags = word_vectors.most_similar(podChosenTags4,topn=25)
+	
+	qTags = []
 
-	tagList = [i[0] for i in nearest_tags]
+	for i in podChosenTags4:
+		qT = tag_to_ind[i]
+		qTags.append(tag_features[qT])
 
-	return render_template('categories5_pod.html',categories = tagList)
+
+	neighbors = []
+	distances, indices = nbrs.kneighbors(qTags)
+
+	inds = indices.tolist()
+
+	for eachInd in inds:
+		for i in eachInd:
+			neighbors.append(ind_to_tag[i])
+
+	del neighbors[0]
+	
+	shuffle(neighbors)
+	neighbors = neighbors[:25]
+
+	return render_template('categories5_pod.html',categories = neighbors)
 
 @app.route("/categories5_news")
 def categories5_news():
-	word_vectors = KeyedVectors.load("news-word-vectors")
-	nearest_tags = word_vectors.most_similar(newsChosenTags4,topn=25)
+	
+	qTags = []
 
-	tagList = [i[0] for i in nearest_tags]
+	for i in newsChosenTags4:
+		qT = tag_to_ind[i]
+		qTags.append(tag_features[qT])
 
-	return render_template('categories5_news.html',categories = tagList)
+
+	neighbors = []
+	distances, indices = nbrs.kneighbors(qTags)
+
+	inds = indices.tolist()
+
+	for eachInd in inds:
+		for i in eachInd:
+			neighbors.append(ind_to_tag[i])
+
+	del neighbors[0]
+	
+	shuffle(neighbors)
+	neighbors = neighbors[:25]
+
+	return render_template('categories5_news.html',categories = neighbors)
 
 @app.route("/recommendations_pod")
 def recommendations_pod():
 
-	global chosenTags3
 
 	# print(chosenTags3)
 
